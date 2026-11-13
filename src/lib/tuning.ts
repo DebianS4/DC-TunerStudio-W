@@ -213,6 +213,22 @@ export const round = (value: number, decimals = 1) => {
   return Math.round(value * factor) / factor
 }
 
+export function correctVeForAfr(before: number, afr: number, targetAfr: number, strength: number) {
+  if (
+    ![before, afr, targetAfr, strength].every(Number.isFinite) ||
+    before <= 0 ||
+    afr <= 0 ||
+    targetAfr <= 0
+  ) {
+    return before
+  }
+
+  // A higher measured AFR means a lean mixture and therefore requires more VE/fuel.
+  const fuelRatio = clamp(afr / targetAfr, 0.88, 1.14)
+  const correctionStrength = clamp(strength, 0, 1) * 0.8
+  return clamp(before * (1 + (fuelRatio - 1) * correctionStrength), 10, 135)
+}
+
 export const uid = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 

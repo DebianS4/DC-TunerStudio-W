@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { AppShell } from '../components/app-shell'
 import { ArcGauge, Readout } from '../components/gauges'
 import { useTuner } from '../lib/tuner-store'
-import { correctionsCsv, ecuProfile, nearestCell, round, targetAfrFor } from '../lib/tuning'
+import { correctionsCsv, ecuProfile, interp, nearestCell, round } from '../lib/tuning'
 import { canonicalUrl } from '../lib/canonical-url'
 import siteMetadata from '../metadata.json'
 
@@ -27,7 +27,9 @@ function AnalyzePage() {
   const { sim, tune, analyze } = state
   const profile = ecuProfile(tune.ecu)
   const cell = nearestCell(sim.rpm, sim.map)
-  const target = targetAfrFor(tune.engine, sim.map)
+  const target = sim.running
+    ? interp(tune.afrTarget, sim.rpm, sim.map)
+    : interp(tune.afrTarget, tune.engine.idleRpm, 32)
   const error = sim.afr > 0 ? round(sim.afr - target, 2) : 0
   const strength = Math.round(tune.engine.analyzeStrength * 100)
 

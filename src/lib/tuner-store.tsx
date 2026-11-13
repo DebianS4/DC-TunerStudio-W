@@ -12,6 +12,7 @@ import {
   ECU_PROFILES,
   MAP_SENSOR_SCALE,
   clamp,
+  correctVeForAfr,
   createTune,
   defaultAfrTable,
   defaultIgnitionTable,
@@ -236,6 +237,58 @@ const initialState = (): State => ({
   hydrated: false,
 })
 
+export function shouldRunSimulation(connection: Pick<Connection, 'status' | 'live'>) {
+  return connection.status !== 'connected' || !connection.live
+}
+
+function applyAnalyzeCorrection(
+  tune: Tune,
+  analyze: State['analyze'],
+  rpm: number,
+  map: number,
+  afr: number,
+  targetAfr: number,
+) {
+  if (
+    !analyze.active ||
+    ![rpm, map, afr, targetAfr].every(Number.isFinite) ||
+    afr <= 0 ||
+    targetAfr <= 0 ||
+    Math.abs(afr - targetAfr) <= 0.06
+  ) {
+    return { tune, analyze }
+  }
+
+  const { row, col } = nearestCell(rpm, map)
+  const before = tune.ve[row]?.[col]
+  if (!Number.isFinite(before)) return { tune, analyze }
+  const after = round(correctVeForAfr(before, afr, targetAfr, tune.engine.analyzeStrength), 1)
+  if (Math.abs(after - before) <= 0.04) return { tune, analyze }
+
+  const veTable = tune.ve.map((cells, ri) =>
+    cells.map((value, ci) => (ri === row && ci === col ? after : value)),
+  )
+  return {
+    tune: { ...tune, ve: veTable, updatedAt: Date.now() },
+    analyze: {
+      active: true,
+      corrections: analyze.corrections + 1,
+      log: [
+        {
+          id: uid(),
+          at: Date.now(),
+          cell: `${Math.round(rpm)} rpm · ${Math.round(map)} kPa`,
+          before: round(before, 1),
+          after,
+          afr: round(afr, 2),
+          targetAfr: round(targetAfr, 2),
+        },
+        ...analyze.log,
+      ].slice(0, 10),
+    },
+  }
+}
+
 function simulate(state: State): State {
   const s = state.sim
   const engine = state.tune.engine
@@ -345,39 +398,9 @@ function simulate(state: State): State {
   let tune = state.tune
   let analyze = state.analyze
   if (analyze.active && ticks % 3 === 0) {
-    const error = Math.abs(afr - targetAfr)
-    if (error > 0.06) {
-      const { row, col } = nearestCell(rpm, map)
-      const before = tune.ve[row][col]
-      const ratio = clamp(targetAfr / afr, 0.88, 1.14)
-      const after = clamp(
-        before * (1 + (ratio - 1) * engine.analyzeStrength * 0.8),
-        10,
-        135,
-      )
-      if (Math.abs(after - before) > 0.04) {
-        const veTable = tune.ve.map((cells, ri) =>
-          cells.map((value, ci) => (ri === row && ci === col ? round(after, 1) : value)),
-        )
-        tune = { ...tune, ve: veTable, updatedAt: Date.now() }
-        analyze = {
-          active: true,
-          corrections: analyze.corrections + 1,
-          log: [
-            {
-              id: uid(),
-              at: Date.now(),
-              cell: `${Math.round(rpm)} rpm · ${Math.round(map)} kPa`,
-              before: round(before, 1),
-              after: round(after, 1),
-              afr: round(afr, 2),
-              targetAfr: round(targetAfr, 2),
-            },
-            ...analyze.log,
-          ].slice(0, 10),
-        }
-      }
-    }
+    const corrected = applyAnalyzeCorrection(tune, analyze, rpm, map, afr, targetAfr)
+    tune = corrected.tune
+    analyze = corrected.analyze
   }
 
   let recording = state.recording
@@ -446,7 +469,7 @@ function reducer(state: State, action: Action): State {
       }
     }
     case 'tick':
-      return simulate(state)
+      return shouldRunSimulation(state.connection) ? simulate(state) : state
 
     case 'toggleRunning': {
       const running = !state.sim.running
@@ -649,16 +672,19 @@ function reducer(state: State, action: Action): State {
 
     case 'telemetry': {
       const data = action.telemetry
+      const targetAfr =
+        data.targetAfr > 0 ? data.targetAfr : interp(state.tune.afrTarget, data.rpm, data.map)
+      const ve = interp(state.tune.ve, data.rpm, data.map)
       const sample: Sample = {
         t: round(state.sim.t + 0.12, 1),
         rpm: Math.round(data.rpm),
         map: round(data.map, 1),
         tps: round(data.tps, 1),
         afr: round(data.afr, 2),
-        targetAfr: round(data.targetAfr || data.afr, 2),
+        targetAfr: round(targetAfr, 2),
         advance: round(data.advance, 1),
         duty: round(data.duty, 1),
-        ve: round(state.sim.ve, 1),
+        ve: round(ve, 1),
         knock: false,
         coolant: round(data.coolant, 1),
       }
@@ -670,13 +696,22 @@ function reducer(state: State, action: Action): State {
           samples: [...recording.samples, sample],
         }
       }
+      let tune = state.tune
+      let analyze = state.analyze
+      if ((state.connection.frames + 1) % 3 === 0) {
+        const corrected = applyAnalyzeCorrection(tune, analyze, data.rpm, data.map, data.afr, targetAfr)
+        tune = corrected.tune
+        analyze = corrected.analyze
+      }
       return {
         ...state,
+        tune,
+        analyze,
         recording,
         connection: {
           ...state.connection,
           frames: state.connection.frames + 1,
-          telemetry: data,
+          telemetry: { ...data, targetAfr },
         },
         sim: {
           ...state.sim,
@@ -686,13 +721,14 @@ function reducer(state: State, action: Action): State {
           map: data.map,
           tps: data.tps,
           afr: data.afr,
-          targetAfr: data.targetAfr || data.afr,
+          targetAfr,
           advance: data.advance,
           coolant: data.coolant,
           iat: data.iat || state.sim.iat,
           battery: data.battery || state.sim.battery,
           dwell: data.dwell || state.tune.settings.dwellMs,
           duty: data.duty,
+          ve,
           history: pushSample(state.sim.history, sample),
         },
       }
