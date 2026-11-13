@@ -1,0 +1,41 @@
+{
+  "name": "dc-tuner-studio-desktop",
+  "productName": "DC-Tuner Studio",
+  "version": "1.0.0",
+  "description": "DC-Tuner Studio para Windows (Speeduino y MegaSquirt)",
+  "author": "DC-Tuner Studio",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.dctuner.studio",
+    "productName": "DC-Tuner Studio",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": ["main.cjs", "web/**/*", "build/icon.ico"],
+    "win": {
+      "target": ["nsis"],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "DC-Tuner Studio",
+      "artifactName": "DC-Tuner-Studio-Setup-${version}.${ext}"
+    }
+  }
+}

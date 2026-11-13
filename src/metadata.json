@@ -1,0 +1,54 @@
+{
+  "/": {
+    "title": "DC-Tuner Studio · ECU tuning en vivo",
+    "description": "Suite de tuning para Speeduino y MegaSquirt (MS2, MS3): dashboard en vivo, tablas VE y de encendido 16×16, datalogger y auto tune de mezcla."
+  },
+  "/fuel": {
+    "title": "Tabla de combustible VE · DC-Tuner Studio",
+    "description": "Edita la tabla VE por RPM y presión de admisión, observa la celda activa y corrige la mezcla hacia el AFR objetivo."
+  },
+  "/ignition": {
+    "title": "Tabla de encendido y avance · DC-Tuner Studio",
+    "description": "Ajusta el avance en grados por carga y RPM, controla el límite de knock y sigue la telemetría de encendido en vivo."
+  },
+  "/analyze": {
+    "title": "VE Analyze Live · DC-Tuner Studio",
+    "description": "Ajuste automático de la tabla de combustible en marcha: corrige cada celda hacia el AFR objetivo y registra los cambios."
+  },
+  "/datalog": {
+    "title": "Datalogger y telemetría · DC-Tuner Studio",
+    "description": "Graba sesiones de telemetría, revisa trazas de RPM, MAP y AFR, y exporta tus datalogs a CSV para analizarlos fuera."
+  },
+  "/tunes": {
+    "title": "Tunes y restore points · DC-Tuner Studio",
+    "description": "Guarda versiones del mapa, crea puntos de restauración y compara los cambios celda por celda con un informe de diferencias."
+  },
+  "/setup": {
+    "title": "Configuración del motor · DC-Tuner Studio",
+    "description": "Selecciona Speeduino, MegaSquirt MS2 o MS3, ajusta firmware y puerto, y define cilindros, inyectores y objetivos de mezcla."
+  },
+  "/charts": {
+    "title": "Gráficas completas · DC-Tuner Studio",
+    "description": "Gráficas multicanal de RPM, MAP, TPS, AFR real y objetivo, avance y duty: elige señales, ventana temporal y compara datalogs guardados."
+  },
+  "/connection": {
+    "title": "Conexión ECU · DC-Tuner Studio",
+    "description": "Conecta tu Speeduino o MegaSquirt por Web Serial, elige protocolo, baudios y carga la definición INI con los offsets de la trama."
+  },
+  "/afr": {
+    "title": "AFR objetivo · DC-Tuner Studio",
+    "description": "Tabla de AFR objetivo 16×16 por RPM y MAP, con lectura en vivo, desvío frente a la mezcla real y valores típicos de referencia."
+  },
+  "/settings": {
+    "title": "Ajustes de la ECU · DC-Tuner Studio",
+    "description": "Dwell, chispa, inyección, ralentí, enriquecimiento por aceleración, EGO y calibración de sensores CLT, IAT, MAP y TPS."
+  },
+  "/diagnostics": {
+    "title": "Diagnóstico · DC-Tuner Studio",
+    "description": "Sensores en vivo, estado de salidas, pruebas de actuadores y registro de eventos de la ECU."
+  },
+  "/guide": {
+    "title": "Guía de uso · DC-Tuner Studio",
+    "description": "Flujo de trabajo en seis pasos y matriz de protocolos compatibles entre Speeduino, MegaSquirt MS2 y MS3."
+  }
+}
