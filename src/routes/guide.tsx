@@ -3,6 +3,7 @@ import { AppShell } from '../components/app-shell'
 import { ECU_PROFILES, ECU_PLATFORMS } from '../lib/tuning'
 import { canonicalUrl } from '../lib/canonical-url'
 import siteMetadata from '../metadata.json'
+import { assetUrl } from '../lib/asset-url'
 
 const pageMeta = siteMetadata['/guide']
 
@@ -133,7 +134,7 @@ function GuidePage() {
             </div>
             <a
               className="btn"
-              href="/downloads/DC-Tuner-Studio-source.zip"
+              href={assetUrl('/downloads/dc-tuner-studio-source.zip')}
               download="DC-Tuner-Studio-source.zip"
               data-testid="download-source"
             >
@@ -162,7 +163,7 @@ function GuidePage() {
             </div>
             <a
               className="btn btn-hot"
-              href="/downloads/DC-Tuner-Studio-Windows.zip"
+              href={assetUrl('/downloads/DC-Tuner-Studio-Windows.zip')}
               download="DC-Tuner-Studio-Windows.zip"
               data-testid="download-windows"
             >

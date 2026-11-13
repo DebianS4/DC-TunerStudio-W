@@ -1,6 +1,7 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { MacalyBridge } from '@macaly/bridge'
 import { TunerProvider } from '../lib/tuner-store'
+import { assetUrl } from '../lib/asset-url'
 
 // CSS imported as a side effect — do NOT add `?url` or `?inline`.
 //
@@ -25,9 +26,9 @@ export const Route = createRootRoute({
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     ],
     links: [
-      { rel: 'icon', type: 'image/png', href: '/logo192.png' },
-      { rel: 'apple-touch-icon', href: '/logo192.png' },
-      { rel: 'manifest', href: '/manifest.json' },
+      { rel: 'icon', type: 'image/png', href: assetUrl('/logo192.png') },
+      { rel: 'apple-touch-icon', href: assetUrl('/logo192.png') },
+      { rel: 'manifest', href: assetUrl('/manifest.json') },
     ],
   }),
   shellComponent: RootDocument,

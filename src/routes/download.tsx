@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { AppShell } from '../components/app-shell'
 import siteMetadata from '../metadata.json'
+import { assetUrl } from '../lib/asset-url'
 
 const pageMeta = siteMetadata['/download']
-const BASE = import.meta.env.BASE_URL
-const assetUrl = (path: string) => `${BASE}${path.replace(/^\//, '')}`
 
 export const Route = createFileRoute('/download')({
   head: () => ({

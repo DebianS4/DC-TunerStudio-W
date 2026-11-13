@@ -46,6 +46,11 @@ npm run build
 
 La página pública se publica en: https://debians4.github.io/DC-TunerStudio-W/
 
+Antes del primer despliegue, en **Settings → Pages → Build and deployment**, selecciona
+**Source: GitHub Actions**. Esta configuración inicial debe hacerla el propietario o un
+administrador: el `GITHUB_TOKEN` del workflow no puede crear el sitio de Pages.
+Después, ejecuta **Deploy website to GitHub Pages** desde la pestaña Actions.
+
 ## Windows
 
 Descomprime `releases/dc-tuner-studio-windows.zip` y ejecuta `Instalar DC-Tuner Studio.bat`.
