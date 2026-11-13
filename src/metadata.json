@@ -1,4 +1,8 @@
 {
+  "/download": {
+    "title": "Descarga oficial · DC-Tuner Studio",
+    "description": "Descarga DC-Tuner Studio para Windows y configura tu flujo de tuning para Speeduino y MegaSquirt."
+  },
   "/": {
     "title": "DC-Tuner Studio · ECU tuning en vivo",
     "description": "Suite de tuning para Speeduino y MegaSquirt (MS2, MS3): dashboard en vivo, tablas VE y de encendido 16×16, datalogger y auto tune de mezcla."

@@ -9,6 +9,8 @@ import { canonicalUrl } from '../lib/canonical-url'
 import siteMetadata from '../metadata.json'
 
 const pageMeta = siteMetadata['/']
+const BASE = import.meta.env.BASE_URL
+const assetUrl = (path: string) => `${BASE}${path.replace(/^\//, '')}`
 
 export const Route = createFileRoute('/')({
   head: () => {
@@ -121,7 +123,7 @@ function Dashboard() {
                 </Link>
                 <a
                   className="btn"
-                  href="/downloads/DC-Tuner-Studio-Windows.zip"
+                  href={assetUrl('/downloads/DC-Tuner-Studio-Windows.zip')}
                   download="DC-Tuner-Studio-Windows.zip"
                   data-testid="hero-download-windows"
                 >
@@ -129,7 +131,7 @@ function Dashboard() {
                 </a>
                 <a
                   className="btn"
-                  href="/downloads/DC-Tuner-Studio-source.zip"
+                  href={assetUrl('/downloads/dc-tuner-studio-source.zip')}
                   download="DC-Tuner-Studio-source.zip"
                   data-testid="hero-download-source"
                 >

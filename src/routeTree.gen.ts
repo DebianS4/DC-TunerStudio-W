@@ -16,6 +16,7 @@ import { Route as ChartsRouteImport } from './routes/charts'
 import { Route as ConnectionRouteImport } from './routes/connection'
 import { Route as DatalogRouteImport } from './routes/datalog'
 import { Route as DiagnosticsRouteImport } from './routes/diagnostics'
+import { Route as DownloadRouteImport } from './routes/download'
 import { Route as FuelRouteImport } from './routes/fuel'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as IgnitionRouteImport } from './routes/ignition'
@@ -58,6 +59,11 @@ const DiagnosticsRoute = DiagnosticsRouteImport.update({
   path: '/diagnostics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DownloadRoute = DownloadRouteImport.update({
+  id: '/download',
+  path: '/download',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FuelRoute = FuelRouteImport.update({
   id: '/fuel',
   path: '/fuel',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/connection': typeof ConnectionRoute
   '/datalog': typeof DatalogRoute
   '/diagnostics': typeof DiagnosticsRoute
+  '/download': typeof DownloadRoute
   '/fuel': typeof FuelRoute
   '/guide': typeof GuideRoute
   '/ignition': typeof IgnitionRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/connection': typeof ConnectionRoute
   '/datalog': typeof DatalogRoute
   '/diagnostics': typeof DiagnosticsRoute
+  '/download': typeof DownloadRoute
   '/fuel': typeof FuelRoute
   '/guide': typeof GuideRoute
   '/ignition': typeof IgnitionRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/connection': typeof ConnectionRoute
   '/datalog': typeof DatalogRoute
   '/diagnostics': typeof DiagnosticsRoute
+  '/download': typeof DownloadRoute
   '/fuel': typeof FuelRoute
   '/guide': typeof GuideRoute
   '/ignition': typeof IgnitionRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/connection'
     | '/datalog'
     | '/diagnostics'
+    | '/download'
     | '/fuel'
     | '/guide'
     | '/ignition'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/connection'
     | '/datalog'
     | '/diagnostics'
+    | '/download'
     | '/fuel'
     | '/guide'
     | '/ignition'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/connection'
     | '/datalog'
     | '/diagnostics'
+    | '/download'
     | '/fuel'
     | '/guide'
     | '/ignition'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   ConnectionRoute: typeof ConnectionRoute
   DatalogRoute: typeof DatalogRoute
   DiagnosticsRoute: typeof DiagnosticsRoute
+  DownloadRoute: typeof DownloadRoute
   FuelRoute: typeof FuelRoute
   GuideRoute: typeof GuideRoute
   IgnitionRoute: typeof IgnitionRoute
@@ -250,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiagnosticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/download': {
+      id: '/download'
+      path: '/download'
+      fullPath: '/download'
+      preLoaderRoute: typeof DownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/fuel': {
       id: '/fuel'
       path: '/fuel'
@@ -303,6 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConnectionRoute: ConnectionRoute,
   DatalogRoute: DatalogRoute,
   DiagnosticsRoute: DiagnosticsRoute,
+  DownloadRoute: DownloadRoute,
   FuelRoute: FuelRoute,
   GuideRoute: GuideRoute,
   IgnitionRoute: IgnitionRoute,

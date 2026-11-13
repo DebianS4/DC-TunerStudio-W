@@ -27,6 +27,10 @@
 *.zip
 *.tar.gz
 *.tar.xz
+!releases/
+!releases/*.zip
+!public/downloads/
+!public/downloads/*.zip
 
 # debug
 npm-debug.log*

@@ -135,6 +135,7 @@ function BookIcon({ className }: IconProps) {
 
 export const NAV_ITEMS = [
   { to: '/', label: 'Dashboard', icon: GaugeIcon },
+  { to: '/download', label: 'Descargar', icon: ArchiveIcon },
   { to: '/fuel', label: 'Fuel Table', icon: FuelIcon },
   { to: '/ignition', label: 'Ignition Table', icon: SparkIcon },
   { to: '/afr', label: 'AFR Target', icon: TargetIcon },
